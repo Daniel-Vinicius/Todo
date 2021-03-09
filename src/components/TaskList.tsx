@@ -15,30 +15,38 @@ export function TaskList() {
   const [newTaskTitle, setNewTaskTitle] = useState("");
 
   function handleCreateNewTask() {
-    const numberCrazy = Math.random() * 10;
-    const id = Math.round(numberCrazy).toFixed(1);
-    if (newTaskTitle) {
-      setTasks([
-        ...tasks,
-        { id: Number(id), title: newTaskTitle, isComplete: false },
-      ]);
-      setNewTaskTitle("");
-    }
+    if (!newTaskTitle) return;
+
+    const id = Number(Math.round(Math.random() * 10).toFixed(1));
+
+    const newTask = {
+      id: id,
+      title: newTaskTitle,
+      isComplete: false,
+    };
+
+    // Setando o State no formato de Callback
+    setTasks((oldState) => [...oldState, newTask]);
+    setNewTaskTitle("");
   }
 
   function handleToggleTaskCompletion(id: number) {
-    const taskWithId = tasks.filter((task) => task.id === id);
-    const isComplete = taskWithId[0].isComplete;
-    if (isComplete === true) {
-      taskWithId[0].isComplete = false;
-    } else {
-      taskWithId[0].isComplete = true;
-    }
-    setTasks([...tasks]);
+    // newTasks retorna um array de tasks e foi usado por setTasks
+    const newTasks = tasks.map((task) =>
+      task.id === id
+        ? {
+            ...task,
+            isComplete: !task.isComplete,
+          }
+        : task
+    );
+
+    setTasks(newTasks);
   }
 
   function handleRemoveTask(id: number) {
-    setTasks(tasks.filter((tasks) => tasks.id !== id));
+    const filteredTasks = tasks.filter((task) => task.id !== id);
+    setTasks(filteredTasks);
   }
   console.log(tasks);
 
